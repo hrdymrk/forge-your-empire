@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jedi Forge | Initiation Room</title>
+    <style>
+        :root{
+            --bg:#000;
+            --fg:#fff;
+            --btn-bg:#007bff;
+            --btn-bg-hover:#0056b3;
+            --focus-outline:#00ffc2;
+        }
+
+        html,body{
+            height:100%;
+            margin:0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .video-container {
+            width: 80%;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid #333;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display:block;
+        }
+
+        #action-button {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.05rem;
+            background-color: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            display: inline-block;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity 1s ease-in, transform 300ms ease-out;
+        }
+
+        #action-button:hover {
+            background-color: var(--btn-bg-hover);
+        }
+
+        #action-button.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #action-button:focus,
+        #action-button:focus-visible {
+            outline: 3px solid var(--focus-outline);
+            outline-offset: 3px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #action-button,
+            #action-button.visible {
+                transition: none;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-container">
+        <!-- Vimeo Embed: Me In A Box (Bad Hair Hardy) -->
+        <iframe
+            src="https://player.vimeo.com/video/1210943969?autoplay=1"
+            title="Me In A Box (Bad Hair Hardy) — Vimeo video"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+
+    <a href="#" id="action-button" role="button" aria-hidden="true">Enter The Forge</a>
+
+    <script>
+    (function(){
+        const btn = document.getElementById('action-button');
+        const SHOW_DELAY_MS = 30000; // 30 seconds
+        let revealed = false;
+
+        function reveal() {
+            if (revealed) return;
+            revealed = true;
+            btn.classList.add('visible');
+            btn.setAttribute('aria-hidden', 'false');
+        }
+
+        const timer = setTimeout(reveal, SHOW_DELAY_MS);
+
+        function onUserPointer() {
+            clearTimeout(timer);
+            reveal();
+            window.removeEventListener('pointerdown', onUserPointer);
+            window.removeEventListener('keydown', onFirstKey);
+        }
+
+        function onFirstKey(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                clearTimeout(timer);
+                reveal();
+                window.removeEventListener('pointerdown', onUserPointer);
+                window.removeEventListener('keydown', onFirstKey);
+            }
+        }
+
+        window.addEventListener('pointerdown', onUserPointer, { once: true });
+        window.addEventListener('keydown', onFirstKey);
+
+        btn.addEventListener('keydown', function(e){
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                btn.click();
+            }
+        });
+
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            // Replace '/forge' with the real destination path
+            window.location.href = '/forge';
+        });
+    })();
+    </script>
+
+</body>
+</html>
